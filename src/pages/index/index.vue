@@ -1,134 +1,158 @@
 <template>
 	<view class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-		<text class="text-3xl font-bold text-blue-600 mb-4">Hello Tailwind CSS!</text>
-		<text class="text-lg text-gray-700 mb-8">Uni-app with Tailwind CSS</text>
+		<text class="text-3xl font-bold text-blue-600 mb-4">今天吃什么？</text>
 		
-		<view class="w-full max-w-md bg-white rounded-lg shadow-md p-6 mb-8">
-			<text class="text-xl font-semibold mb-4 text-center">环境变量信息</text>
-			<view class="space-y-2">
-				<view class="flex justify-between">
-					<text class="font-medium">应用名称:</text>
-					<text>{{ appName }}</text>
+		<!-- 美食展示区 -->
+		<view class="w-full max-w-md bg-white rounded-lg shadow-md p-6 mb-6">
+			<text class="text-xl font-semibold mb-4 text-center">美食库</text>
+			<view class="grid grid-cols-3 gap-3 max-h-60 overflow-y-auto">
+				<view 
+					v-for="food in foodStore.foods" 
+					:key="food.id"
+					class="flex flex-col items-center p-2 border border-gray-200 rounded"
+				>
+					<view class="w-12 h-12 bg-gray-200 rounded-full mb-1 flex items-center justify-center">
+						<text class="text-lg">🍽️</text>
+					</view>
+					<text class="text-sm text-center">{{ food.name }}</text>
 				</view>
-				<view class="flex justify-between">
-					<text class="font-medium">环境模式:</text>
-					<text>{{ mode }}</text>
-				</view>
-				<view class="flex justify-between">
-					<text class="font-medium">API 地址:</text>
-					<text class="text-sm">{{ apiUrl }}</text>
-				</view>
-				<view class="flex justify-between">
-					<text class="font-medium">调试模式:</text>
-					<text>{{ debugMode ? '开启' : '关闭' }}</text>
-				</view>
-				<view class="flex justify-between">
-					<text class="font-medium">应用版本:</text>
-					<text>{{ appVersion }}</text>
+				
+				<view 
+					class="flex flex-col items-center p-2 border-2 border-dashed border-gray-300 rounded cursor-pointer hover:border-blue-400"
+					@click="goToAddFood"
+				>
+					<view class="w-12 h-12 rounded-full mb-1 flex items-center justify-center">
+						<text class="text-2xl text-gray-400">+</text>
+					</view>
+					<text class="text-sm text-center text-gray-500">添加</text>
 				</view>
 			</view>
 		</view>
 		
-		<view class="w-full max-w-md bg-white rounded-lg shadow-md p-6 mb-8">
-			<text class="text-xl font-semibold mb-4 text-center">HTTP 请求测试</text>
-			<view class="space-y-4">
-				<view class="flex items-center">
-					<input 
-						class="flex-1 border border-gray-300 rounded px-3 py-2 mr-2" 
-						placeholder="输入用户ID"
-						v-model="userId"
-					/>
-					<button 
-						class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-						@click="fetchUser"
-						:disabled="loading"
+		<!-- 动画展示区 -->
+		<view 
+			v-if="isSelecting" 
+			class="w-full max-w-md bg-white rounded-lg shadow-md p-6 mb-6 flex flex-col items-center justify-center h-48"
+		>
+			<view class="flex space-x-4 mb-4">
+				<view 
+					v-for="(foods, index) in rollingFoods" 
+					:key="index"
+					class="flex flex-col items-center"
+				>
+					<view class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center" 
+						  :class="{'animate-bounce': isSelecting}"
+						  :style="{ animationDelay: `${index * 0.1}s` }">
+						<text class="text-2xl">🍽️</text>
+					</view>
+					<text class="text-sm">{{ foods[Math.floor(Math.random() * foods.length)].name }}</text>
+				</view>
+			</view>
+			<text class="text-lg">正在为你选择...</text>
+		</view>
+		
+		<!-- 结果展示区 -->
+		<view 
+			v-if="selectedFoods.length > 0 && !isSelecting" 
+			class="w-full max-w-md bg-white rounded-lg shadow-md p-6 mb-6"
+		>
+			<text class="text-xl font-semibold mb-4 text-center">选中美食</text>
+			<view class="flex flex-col items-center">
+				<view class="flex space-x-4 mb-4">
+					<view 
+						v-for="food in selectedFoods" 
+						:key="food.id"
+						class="flex flex-col items-center"
 					>
-						{{ loading ? '获取中...' : '获取用户' }}
-					</button>
-				</view>
-				
-				<view v-if="userData" class="border border-gray-200 rounded p-3">
-					<text class="font-medium">用户信息:</text>
-					<view class="mt-2">
-						<text>姓名: {{ userData.name }}</text>
-					</view>
-					<view>
-						<text>邮箱: {{ userData.email }}</text>
+						<view class="w-20 h-20 bg-yellow-100 rounded-full mb-2 flex items-center justify-center border-2 border-yellow-400">
+							<text class="text-3xl">🍽️</text>
+						</view>
+						<text class="font-semibold">{{ food.name }}</text>
 					</view>
 				</view>
-				
-				<view v-if="error" class="text-red-500">
-					<text>错误: {{ error }}</text>
-				</view>
+				<text class="text-gray-600 mb-4">就是它了！</text>
 			</view>
 		</view>
 		
-		<view class="flex flex-col items-center mb-8">
-			<text class="text-2xl mb-4">Count: {{ counter.count }}</text>
-			<view class="flex space-x-4">
-				<button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" @click="counter.decrement">-</button>
-				<button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition" @click="counter.increment">+</button>
-			</view>
-		</view>
-		
-		<view class="flex space-x-4">
-			<button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Button 1</button>
-			<button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Button 2</button>
+		<!-- 操作按钮区 -->
+		<view class="flex flex-col w-full max-w-md space-y-4">
+			<button 
+				class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-lg font-medium"
+				@click="startSelection"
+				:disabled="isSelecting || foodStore.foods.length === 0"
+			>
+				{{ isSelecting ? '选择中...' : '开始选择' }}
+			</button>
+			
+			<button 
+				class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-lg font-medium"
+				@click="goToAddFood"
+			>
+				添加美食
+			</button>
+			
+			<button 
+				v-if="selectedFoods.length > 0 && !isSelecting"
+				class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition text-lg font-medium"
+				@click="startSelection"
+			>
+				再来一次
+			</button>
 		</view>
 	</view>
 </template>
 
 <script>
-	import { useCounterStore } from '../../stores/counter.js'
-	
-	// 引入环境变量工具
-	import { getEnvString, getEnvBoolean } from '../../utils/env.js'
-	
-	// 引入 API 工具
-	import { userApi } from '../../api/index.js'
+	import { useFoodStore } from '../../stores/food.js'
 	
 	export default {
 		data() {
 			return {
-				counter: useCounterStore(),
-				// 使用环境变量
-				appName: getEnvString('VITE_APP_NAME', '默认应用'),
-				mode: import.meta.env.MODE || 'unknown',
-				apiUrl: getEnvString('VITE_API_BASE_URL', ''),
-				debugMode: getEnvBoolean('VITE_DEBUG_MODE', false),
-				appVersion: getEnvString('VITE_APP_VERSION', '1.0.0'),
-				
-				// 请求相关数据
-				userId: '',
-				userData: null,
-				loading: false,
-				error: ''
+				foodStore: useFoodStore(),
+				isSelecting: false,
+				selectedFoods: [],
+				rollingFoods: []
 			}
 		},
+		
 		methods: {
-			async fetchUser() {
-				if (!this.userId) {
-					this.error = '请输入用户ID'
+			// 开始选择
+			startSelection() {
+				if (this.foodStore.foods.length === 0) {
+					uni.showToast({
+						title: '请先添加美食',
+						icon: 'none'
+					})
 					return
 				}
 				
-				this.loading = true
-				this.error = ''
-				this.userData = null
+				this.isSelecting = true
+				this.selectedFoods = []
 				
-				try {
-					// 这里只是一个示例，实际项目中需要替换为真实的 API 地址
-					// this.userData = await userApi.getUserInfo(this.userId)
-					// 模拟数据
-					this.userData = {
-						name: '张三',
-						email: 'zhangsan@example.com'
-					}
-				} catch (err) {
-					this.error = err.message || '获取用户信息失败'
-				} finally {
-					this.loading = false
+				// 生成滚动数据
+				this.generateRollingFoods()
+				
+				// 2.5秒后停止动画并显示结果
+				setTimeout(() => {
+					this.isSelecting = false
+					this.selectedFoods = this.foodStore.randomSelect(1)
+				}, 2500)
+			},
+			
+			// 生成滚动数据
+			generateRollingFoods() {
+				// 创建多个随机食物数组用于滚动效果
+				this.rollingFoods = []
+				for (let i = 0; i < 10; i++) {
+					this.rollingFoods.push(this.foodStore.randomSelect(3))
 				}
+			},
+			
+			// 跳转到添加美食页面
+			goToAddFood() {
+				uni.navigateTo({
+					url: '/pages/index/add-food'
+				})
 			}
 		}
 	}
