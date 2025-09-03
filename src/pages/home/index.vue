@@ -53,23 +53,23 @@
     <view
         class="w-full max-w-md mb-8 flex items-center justify-center"
         :class="{
-				'h-40': isSelecting,
+				'h-80': isSelecting,
 				'min-h-60': selectedFoods.length > 0 && !isSelecting,
 				'hidden': !isSelecting && selectedFoods.length === 0
 			}"
     >
-      <!-- 滚动动画 -->
-      <view v-if="isSelecting" class="flex overflow-hidden">
+      <!-- 滚动动画：改成4×5网格 -->
+      <view v-if="isSelecting" class="grid grid-cols-4 grid-rows-5 gap-2 w-full h-full overflow-hidden mt-10">
         <view
             v-for="(food, index) in rollingFoods"
             :key="index"
-            class="flex flex-col items-center mx-2 transition-transform duration-100"
+            class="flex flex-col items-center transition-transform duration-100"
         >
           <view
-              class="w-20 h-20 bg-white rounded-full mb-2 flex items-center justify-center shadow-md border-2 border-gray-100">
-            <text class="text-3xl">🍽️</text>
+              class="w-12 h-12 bg-white rounded-full mb-1 flex items-center justify-center shadow-md border border-gray-100">
+            <text class="text-lg">🍽️</text>
           </view>
-          <text class="text-sm font-medium">{{ food.name }}</text>
+          <text class="text-xs font-medium truncate w-full text-center">{{ food.name }}</text>
         </view>
       </view>
 
@@ -233,8 +233,8 @@ export default {
     // 生成滚动数据
     generateRollingFoods() {
       this.rollingFoods = []
-      // 生成10组随机食物用于滚动效果
-      for (let i = 0; i < 10; i++) {
+      // 生成20个随机食物用于滚动效果（4列×5行）
+      for (let i = 0; i < 20; i++) {
         const randomFood = this.foodStore.foods[Math.floor(Math.random() * this.foodStore.foods.length)]
         this.rollingFoods.push(randomFood)
       }
