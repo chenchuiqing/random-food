@@ -1,5 +1,5 @@
 <template>
-	<view class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-4">
+	<view class="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-4 pt-10">
 		<text class="text-3xl font-bold text-gray-800 mb-2">今天吃什么？</text>
 		
 		<!-- 提示词 -->
