@@ -1,5 +1,5 @@
 <template>
-	<view class="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-4 pt-10">
+	<view class="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-4 pt-8">
 		<text class="text-3xl font-bold text-gray-800 mb-2">今天吃什么？</text>
 		
 		<!-- 提示词 -->
@@ -50,14 +50,15 @@
 		
 		<!-- 动画展示区 -->
 		<view 
-			class="w-full max-w-md h-40 mb-8 flex items-center justify-center overflow-hidden"
+			class="w-full max-w-md mb-8 flex items-center justify-center"
 			:class="{
-				'z-0': isSelecting || selectedFoods.length > 0,
+				'h-40': isSelecting,
+				'min-h-60': selectedFoods.length > 0 && !isSelecting,
 				'hidden': !isSelecting && selectedFoods.length === 0
 			}"
 		>
 			<!-- 滚动动画 -->
-			<view v-if="isSelecting" class="flex">
+			<view v-if="isSelecting" class="flex overflow-hidden">
 				<view 
 					v-for="(food, index) in rollingFoods" 
 					:key="index"
@@ -73,7 +74,7 @@
 			<!-- 结果展示 -->
 			<view 
 				v-if="selectedFoods.length > 0 && !isSelecting" 
-				class="flex flex-col items-center transition-all duration-500"
+				class="flex flex-col items-center transition-all duration-500 py-4"
 				@touchstart="resetSelection"
 				@mousedown="resetSelection"
 			>
