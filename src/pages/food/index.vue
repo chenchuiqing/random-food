@@ -34,12 +34,7 @@
 							class="w-12 h-12"
 							mode="aspectFill"
 						/>
-						<image
-							v-else
-							src="/static/foods/default.png"
-							class="w-8 h-8 opacity-60"
-							mode="aspectFit"
-						/>
+						<text v-else class="text-xl text-yellow-500">🍽️</text>
 					</view>
 					
 					<!-- 美食名称 -->
@@ -69,7 +64,7 @@
 					v-if="foodStore.foods.length === 0" 
 					class="py-12 flex flex-col items-center justify-center text-gray-400"
 				>
-					<text class="text-4xl mb-2">🍽️</text>
+					<text class="text-4xl mb-2 text-yellow-500">🍽️</text>
 					<text class="text-lg mb-2">暂无美食</text>
 					<text>点击上方按钮添加美食</text>
 				</view>
