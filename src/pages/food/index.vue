@@ -181,6 +181,7 @@
 				uni.showModal({
 					title: '确认删除',
 					content: '确定要删除这个美食吗？',
+					confirmColor: '#ff0000',
 					success: async (res) => {
 						if (res.confirm) {
 							// 使用数据库持久化存储
