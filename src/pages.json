@@ -11,6 +11,12 @@
 			"style": {
 				"navigationBarTitleText": "美食"
 			}
+		},
+		{
+			"path": "pages/food/add-food",
+			"style": {
+				"navigationBarTitleText": "添加美食"
+			}
 		}
 	],
 	"globalStyle": {

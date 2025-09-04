@@ -120,7 +120,7 @@
 			// 跳转到添加美食页面
 			goToAddFood() {
 				uni.navigateTo({
-					url: '/pages/index/add-food'
+					url: '/pages/food/add-food'
 				})
 			},
 			
@@ -128,7 +128,8 @@
 			editFood(food) {
 				this.editingFood = {
 					id: food.id,
-					name: food.name
+					name: food.name,
+					image: food.image
 				}
 				this.showEditModal = true
 			},
@@ -143,7 +144,7 @@
 					return
 				}
 				
-				this.foodStore.editFood(this.editingFood.id, this.editingFood.name, '')
+				this.foodStore.editFood(this.editingFood.id, this.editingFood.name, this.editingFood.image)
 				this.showEditModal = false
 				uni.showToast({
 					title: '保存成功',
