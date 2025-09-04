@@ -95,13 +95,8 @@
 						this.foodImage = res.tempFilePaths[0]
 					},
 					fail: () => {
-						// 模拟选择图片
-						const mockImages = [
-							'/static/foods/burger.png',
-							'/static/foods/pizza.png',
-							'/static/foods/sushi.png'
-						]
-						this.foodImage = mockImages[Math.floor(Math.random() * mockImages.length)]
+						// 失败占位：使用已存在的静态资源
+						this.foodImage = '/static/logo.png'
 					}
 				})
 			},

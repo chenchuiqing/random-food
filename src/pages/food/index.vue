@@ -27,8 +27,19 @@
 					:class="{ 'bg-gray-50': index % 2 === 0 }"
 				>
 					<!-- 美食图片 -->
-					<view class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
-						<text class="text-xl">🍽️</text>
+					<view class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4 overflow-hidden">
+						<image
+							v-if="food.image"
+							:src="food.image"
+							class="w-12 h-12"
+							mode="aspectFill"
+						/>
+						<image
+							v-else
+							src="/static/logo.png"
+							class="w-8 h-8 opacity-60"
+							mode="aspectFit"
+						/>
 					</view>
 					
 					<!-- 美食名称 -->
