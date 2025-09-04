@@ -2,11 +2,16 @@
   import { useFoodStore } from './stores/food.js'
   
   export default {
-    onLaunch: function() {
+    async onLaunch() {
       console.log('App Launch')
       // 初始化数据库
       const foodStore = useFoodStore()
-      foodStore.initDatabase()
+      try {
+        await foodStore.initDatabase()
+        console.log('数据库初始化完成')
+      } catch (error) {
+        console.error('数据库初始化失败:', error)
+      }
     },
     onShow: function() {
       console.log('App Show')
