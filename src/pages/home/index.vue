@@ -56,8 +56,8 @@
         class="w-full max-w-md mb-8 flex items-center justify-center"
         :class="{
 				'h-80': isSelecting,
-				'min-h-60': selectedFoods.length > 0 && !isSelecting,
-				'hidden': !isSelecting && selectedFoods.length === 0
+				'min-h-60': podiumFoods.length > 0 && !isSelecting,
+				'hidden': !isSelecting && podiumFoods.length === 0
 			}"
     >
       <!-- 滚动动画：改成4×5网格 -->
@@ -75,27 +75,55 @@
         </view>
       </view>
 
-      <!-- 结果展示 -->
+      <!-- 结果展示：三名颁奖台 -->
       <view
-          v-if="selectedFoods.length > 0 && !isSelecting"
-          class="flex flex-col items-center transition-all duration-500 py-4"
+          v-if="podiumFoods.length > 0 && !isSelecting"
+          class="flex flex-col items-center transition-all duration-500 py-4 w-full"
           @touchstart="resetSelection"
           @mousedown="resetSelection"
       >
-        <view class="flex space-x-4 mb-4">
-          <view
-              v-for="food in selectedFoods"
-              :key="food.id"
-              class="flex flex-col items-center"
-          >
-            <view
-                class="w-24 h-24 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full mb-3 flex items-center justify-center border-4 border-yellow-300 shadow-lg transform scale-110">
-              <text class="text-4xl">🍽️</text>
+        <view class="w-full max-w-md grid grid-cols-3 gap-3 items-end">
+          <!-- 第二名（左） -->
+          <view class="flex flex-col items-center">
+            <view class="w-full flex items-end justify-center">
+              <view class="bg-gray-200 rounded-t-md w-20 h-16"></view>
             </view>
-            <text class="font-bold text-xl">{{ food.name }}</text>
+            <view v-show="showSecond" class="-mt-10 flex flex-col items-center transition-all duration-500">
+              <view class="w-20 h-20 rounded-full bg-white border-4 border-gray-300 shadow-md flex items-center justify-center">
+                <text class="text-2xl">🍽️</text>
+              </view>
+              <text class="mt-2 text-xs text-gray-600">第二名</text>
+              <text class="font-semibold mt-1 text-sm truncate max-w-[6rem]">{{ podiumFoods[1]?.name }}</text>
+            </view>
+          </view>
+          <!-- 第一名（中） -->
+          <view class="flex flex-col items-center">
+            <view class="w-full flex items-end justify-center">
+              <view class="bg-yellow-300 rounded-t-md w-24 h-24 shadow"></view>
+            </view>
+            <view v-show="showFirst" class="-mt-14 flex flex-col items-center transition-all duration-500 transform">
+              <view class="w-24 h-24 rounded-full bg-white border-4 border-yellow-400 shadow-lg flex items-center justify-center scale-110">
+                <text class="text-3xl">🏆</text>
+              </view>
+              <text class="mt-2 text-xs text-yellow-700">第一名</text>
+              <text class="font-bold mt-1 text-base truncate max-w-[7rem]">{{ podiumFoods[0]?.name }}</text>
+            </view>
+          </view>
+          <!-- 第三名（右） -->
+          <view class="flex flex-col items-center">
+            <view class="w-full flex items-end justify-center">
+              <view class="bg-amber-300 rounded-t-md w-20 h-14"></view>
+            </view>
+            <view v-show="showThird" class="-mt-8 flex flex-col items-center transition-all duration-500">
+              <view class="w-16 h-16 rounded-full bg-white border-4 border-amber-400 shadow flex items-center justify-center">
+                <text class="text-xl">🍽️</text>
+              </view>
+              <text class="mt-2 text-xs text-amber-700">第三名</text>
+              <text class="font-medium mt-1 text-sm truncate max-w-[5rem]">{{ podiumFoods[2]?.name }}</text>
+            </view>
           </view>
         </view>
-        <text class="text-gray-500 text-sm mt-2">点击美食可重新选择</text>
+        <text class="text-gray-500 text-sm mt-4">点击屏幕可重新选择</text>
       </view>
     </view>
 
@@ -117,7 +145,11 @@ export default {
       rollingFoods: [],
       pressTimer: null,
       rollingTimer: null,
-      hintText: '长按按钮抽取美食...'
+      hintText: '长按按钮抽取美食...',
+      podiumFoods: [],
+      showFirst: false,
+      showSecond: false,
+      showThird: false
     }
   },
 
@@ -215,8 +247,21 @@ export default {
         } else {
           // 动画结束
           this.isSelecting = false
-          this.selectedFoods = this.foodStore.randomSelect(1)
-          this.hintText = '今天就吃这个吧！'
+          const results = this.foodStore.randomSelect(3)
+          this.podiumFoods = [results[0], results[1], results[2]].filter(Boolean)
+          this.showThird = false
+          this.showSecond = false
+          this.showFirst = false
+          setTimeout(() => {
+            this.showThird = true
+            setTimeout(() => {
+              this.showSecond = true
+              setTimeout(() => {
+                this.showFirst = true
+                this.hintText = '最推荐在中间高台！'
+              }, 300)
+            }, 300)
+          }, 200)
         }
       }
 
@@ -245,6 +290,10 @@ export default {
     // 重置选择
     resetSelection() {
       this.selectedFoods = []
+      this.podiumFoods = []
+      this.showFirst = false
+      this.showSecond = false
+      this.showThird = false
       this.hintText = '长按按钮抽取美食...'
     },
 

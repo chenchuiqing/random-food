@@ -36,7 +36,7 @@
 						/>
 						<image
 							v-else
-							src="/static/logo.png"
+							src="/static/foods/default.png"
 							class="w-8 h-8 opacity-60"
 							mode="aspectFit"
 						/>
