@@ -68,16 +68,16 @@ export const useFoodStore = defineStore('food', {
           await this.loadFoodsFromDatabase()
         } catch (error) {
           console.error('添加食物到数据库失败:', error)
-          // 如果数据库操作失败，仍然添加到内存中
-          this.foods.push({
+          // 如果数据库操作失败，仍然添加到内存中（添加到最前面）
+          this.foods.unshift({
             id: this.nextId++,
             name,
             image
           })
         }
       } else {
-        // 如果数据库未就绪，直接添加到内存中
-        this.foods.push({
+        // 如果数据库未就绪，直接添加到内存中（添加到最前面）
+        this.foods.unshift({
           id: this.nextId++,
           name,
           image
