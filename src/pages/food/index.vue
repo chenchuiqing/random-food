@@ -72,15 +72,16 @@
 		>
 			<view class="bg-white rounded-lg w-full max-w-md p-6">
 				<text class="text-xl font-bold mb-4 block">编辑美食</text>
-				
-				<view class="mb-4">
-					<text class="block text-gray-700 text-sm font-bold mb-2">美食名称</text>
-					<input
-						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-						v-model="editingFood.name"
-						placeholder="请输入美食名称"
-					/>
-				</view>
+
+        <view class="mb-4">
+          <text class="block text-gray-700 text-sm font-bold mb-2">美食名称</text>
+          <input
+              v-model="editingFood.name"
+              type="text"
+              placeholder="请输入美食名称"
+              class="block w-full h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </view>
 				
 				<view class="flex space-x-3 pt-4">
 					<button

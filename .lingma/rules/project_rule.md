@@ -11,7 +11,7 @@
 - 使用 **SQLite** 作为数据库
 
 ### 框架与库
-- **Vue**：使用 Vue 3 + 选项式 API
+- **uni-app**：使用 Vue 3 + 选项式 API
 - 状态管理：**Pinia**
 - API 调用：**Axios** 或 **Fetch API**
 - CSS 框架：**Tailwind CSS**

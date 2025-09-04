@@ -11,18 +11,19 @@
 		<!-- 添加美食表单 -->
 		<view class="flex-1 p-4">
 			<view class="bg-white rounded-lg shadow-md p-6">
-				<view class="mb-6">
-					<text class="block text-gray-700 text-sm font-bold mb-2">美食名称</text>
-					<input
-						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-						v-model="foodName"
-						placeholder="请输入美食名称"
-						:focusable="true"
-						@focus="onFocus"
-						@blur="onBlur"
-					/>
-				</view>
-				
+        <view class="mb-6">
+          <text class="block text-gray-700 text-sm font-bold mb-2">美食名称</text>
+          <input
+              v-model="foodName"
+              type="text"
+              placeholder="请输入美食名称"
+              class="block w-full h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :focusable="true"
+              @focus="onFocus"
+              @blur="onBlur"
+          />
+        </view>
+
 				<view class="mb-6">
 					<text class="block text-gray-700 text-sm font-bold mb-2">美食图片</text>
 					<view 
