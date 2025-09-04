@@ -88,7 +88,7 @@
             <view class="w-full flex items-end justify-center">
               <view class="bg-gray-200 rounded-t-md w-20 h-16"></view>
             </view>
-            <view v-show="showSecond" class="-mt-10 flex flex-col items-center transition-all duration-500">
+            <view v-show="showSecond" class="-mt-10 flex flex-col items-center transition-all duration-700">
               <view class="w-20 h-20 rounded-full bg-white border-4 border-gray-300 shadow-md flex items-center justify-center">
                 <text class="text-2xl">🍽️</text>
               </view>
@@ -101,7 +101,7 @@
             <view class="w-full flex items-end justify-center">
               <view class="bg-yellow-300 rounded-t-md w-24 h-24 shadow"></view>
             </view>
-            <view v-show="showFirst" class="-mt-14 flex flex-col items-center transition-all duration-500 transform">
+            <view v-show="showFirst" class="-mt-14 flex flex-col items-center transition-all duration-700 transform">
               <view class="w-24 h-24 rounded-full bg-white border-4 border-yellow-400 shadow-lg flex items-center justify-center scale-110">
                 <text class="text-3xl">🏆</text>
               </view>
@@ -114,7 +114,7 @@
             <view class="w-full flex items-end justify-center">
               <view class="bg-amber-300 rounded-t-md w-20 h-14"></view>
             </view>
-            <view v-show="showThird" class="-mt-8 flex flex-col items-center transition-all duration-500">
+            <view v-show="showThird" class="-mt-8 flex flex-col items-center transition-all duration-700">
               <view class="w-16 h-16 rounded-full bg-white border-4 border-amber-400 shadow flex items-center justify-center">
                 <text class="text-xl">🍽️</text>
               </view>
@@ -259,9 +259,9 @@ export default {
               setTimeout(() => {
                 this.showFirst = true
                 this.hintText = '最推荐在中间高台！'
-              }, 300)
-            }, 300)
-          }, 200)
+              }, 700)
+            }, 700)
+          }, 500)
         }
       }
 
