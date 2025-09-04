@@ -1,7 +1,7 @@
 <template>
 	<view class="flex flex-col bg-gray-100 overflow-hidden" style="min-height: calc(100vh - var(--window-top) - var(--window-bottom));">
 		<!-- 顶部导航栏 -->
-		<view class="bg-white shadow-sm py-4 px-4 flex items-center justify-center">
+		<view class="bg-white py-3 px-4 shadow-sm flex items-center justify-center">
 			<text class="text-gray-600 text-sm">美食无界，分享此刻的味道</text>
 		</view>
 		
@@ -51,7 +51,7 @@
 					取消
 				</button>
 				<button
-					class="flex-1 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+					class="flex-1 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
 					@click="addFood"
 					:disabled="!foodName.trim()"
 				>

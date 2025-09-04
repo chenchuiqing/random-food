@@ -1,8 +1,8 @@
 <template>
 	<view class="flex flex-col min-h-screen bg-gray-50">
 		<!-- 页面标题 -->
-		<view class="bg-white py-4 px-4 shadow-sm">
-			<text class="text-2xl font-bold text-gray-800">美食管理</text>
+		<view class="bg-white py-3 px-4 shadow-sm flex items-center justify-center">
+			<text class="text-gray-600 text-sm">{{ currentSlogan }}</text>
 		</view>
 		
 		<!-- 美食列表 -->
@@ -10,7 +10,7 @@
 			<!-- 添加美食按钮 -->
 			<view class="mb-6">
 				<button 
-					class="w-full py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center"
+					class="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center"
 					@click="goToAddFood"
 				>
 					<text class="mr-2">+</text>
@@ -91,7 +91,7 @@
 						取消
 					</button>
 					<button
-						class="flex-1 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600"
+						class="flex-1 py-2 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600"
 						@click="saveFood"
 					>
 						保存
@@ -113,7 +113,23 @@
 				editingFood: {
 					id: null,
 					name: ''
-				}
+				},
+				slogans: [
+					'美食无界，分享此刻的味道',
+					'一口定情，满分好味道',
+					'让味蕾去旅行',
+					'此刻好味，值得被记录',
+					'烟火气里的小确幸',
+					'认真吃饭，热爱生活'
+				],
+				currentSlogan: ''
+			}
+		},
+
+		onShow() {
+			if (this.slogans && this.slogans.length > 0) {
+				const index = Math.floor(Math.random() * this.slogans.length)
+				this.currentSlogan = this.slogans[index]
 			}
 		},
 		
