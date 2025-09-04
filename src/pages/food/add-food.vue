@@ -106,7 +106,7 @@
 			},
 			
 			// 添加美食
-			addFood() {
+			async addFood() {
 				if (!this.foodName.trim()) {
 					uni.showToast({
 						title: '请输入美食名称',
@@ -115,7 +115,8 @@
 					return
 				}
 				
-				this.foodStore.addFood(this.foodName.trim(), this.foodImage)
+				// 使用数据库持久化存储
+				await this.foodStore.addFood(this.foodName.trim(), this.foodImage)
 				
 				uni.showToast({
 					title: '添加成功',

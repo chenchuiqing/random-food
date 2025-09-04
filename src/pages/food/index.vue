@@ -136,7 +136,7 @@
 			},
 			
 			// 保存美食
-			saveFood() {
+			async saveFood() {
 				if (!this.editingFood.name.trim()) {
 					uni.showToast({
 						title: '请输入美食名称',
@@ -145,7 +145,8 @@
 					return
 				}
 				
-				this.foodStore.editFood(this.editingFood.id, this.editingFood.name, this.editingFood.image)
+				// 使用数据库持久化存储
+				await this.foodStore.editFood(this.editingFood.id, this.editingFood.name, this.editingFood.image)
 				this.showEditModal = false
 				uni.showToast({
 					title: '保存成功',
@@ -154,13 +155,14 @@
 			},
 			
 			// 删除美食
-			deleteFood(id) {
+			async deleteFood(id) {
 				uni.showModal({
 					title: '确认删除',
 					content: '确定要删除这个美食吗？',
-					success: (res) => {
+					success: async (res) => {
 						if (res.confirm) {
-							this.foodStore.removeFood(id)
+							// 使用数据库持久化存储
+							await this.foodStore.removeFood(id)
 							uni.showToast({
 								title: '删除成功',
 								icon: 'success'

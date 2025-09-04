@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import database from '../utils/database.js'
 
 export const useFoodStore = defineStore('food', {
   state: () => ({
@@ -15,30 +16,114 @@ export const useFoodStore = defineStore('food', {
       { id: 9, name: '沙拉', image: '' },
       { id: 10, name: '烤肉', image: '' }
     ],
-    nextId: 11
+    nextId: 11,
+    isDatabaseReady: false
   }),
   
   actions: {
+    // 初始化数据库
+    async initDatabase() {
+      try {
+        const result = await database.init()
+        if (result) {
+          this.isDatabaseReady = true
+          // 从数据库加载食物数据
+          await this.loadFoodsFromDatabase()
+        }
+      } catch (error) {
+        console.error('数据库初始化失败:', error)
+      }
+    },
+    
+    // 从数据库加载食物数据
+    async loadFoodsFromDatabase() {
+      if (!this.isDatabaseReady) return
+      
+      try {
+        const foods = await database.getAllFoods()
+        // 如果数据库中有数据，则替换默认数据
+        if (foods && foods.length > 0) {
+          this.foods = foods.map(food => ({
+            id: food.id,
+            name: food.name,
+            image: food.image
+          }))
+          // 更新nextId以确保新添加的食物ID不会冲突
+          if (this.foods.length > 0) {
+            this.nextId = Math.max(...this.foods.map(f => f.id)) + 1
+          }
+        }
+      } catch (error) {
+        console.error('从数据库加载食物数据失败:', error)
+      }
+    },
+    
     // 添加美食
-    addFood(name, image = '') {
-      this.foods.push({
-        id: this.nextId++,
-        name,
-        image
-      })
+    async addFood(name, image = '') {
+      if (this.isDatabaseReady) {
+        try {
+          // 先添加到数据库
+          await database.addFood(name, image)
+          // 重新加载数据以获取正确的ID
+          await this.loadFoodsFromDatabase()
+        } catch (error) {
+          console.error('添加食物到数据库失败:', error)
+          // 如果数据库操作失败，仍然添加到内存中
+          this.foods.push({
+            id: this.nextId++,
+            name,
+            image
+          })
+        }
+      } else {
+        // 如果数据库未就绪，直接添加到内存中
+        this.foods.push({
+          id: this.nextId++,
+          name,
+          image
+        })
+      }
     },
     
     // 删除美食
-    removeFood(id) {
-      this.foods = this.foods.filter(food => food.id !== id)
+    async removeFood(id) {
+      if (this.isDatabaseReady) {
+        try {
+          await database.deleteFood(id)
+          await this.loadFoodsFromDatabase()
+        } catch (error) {
+          console.error('从数据库删除食物失败:', error)
+          // 如果数据库操作失败，直接从内存中删除
+          this.foods = this.foods.filter(food => food.id !== id)
+        }
+      } else {
+        // 如果数据库未就绪，直接从内存中删除
+        this.foods = this.foods.filter(food => food.id !== id)
+      }
     },
     
     // 编辑美食
-    editFood(id, name, image) {
-      const food = this.foods.find(food => food.id === id)
-      if (food) {
-        food.name = name
-        food.image = image
+    async editFood(id, name, image) {
+      if (this.isDatabaseReady) {
+        try {
+          await database.updateFood(id, name, image)
+          await this.loadFoodsFromDatabase()
+        } catch (error) {
+          console.error('更新数据库中的食物失败:', error)
+          // 如果数据库操作失败，直接更新内存中的数据
+          const food = this.foods.find(food => food.id === id)
+          if (food) {
+            food.name = name
+            food.image = image
+          }
+        }
+      } else {
+        // 如果数据库未就绪，直接更新内存中的数据
+        const food = this.foods.find(food => food.id === id)
+        if (food) {
+          food.name = name
+          food.image = image
+        }
       }
     },
     
