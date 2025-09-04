@@ -121,8 +121,8 @@
 				
 				uni.showToast({
 					title: '添加成功',
-					icon: 'success',
-					position: 'bottom',
+					icon: 'none',
+					position: 'center',
 					mask: true,
 					duration: 1500
 				})

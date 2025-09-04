@@ -150,7 +150,7 @@
 				this.showEditModal = false
 				uni.showToast({
 					title: '保存成功',
-					icon: 'success'
+					icon: 'none'
 				})
 			},
 			
@@ -165,7 +165,7 @@
 							await this.foodStore.removeFood(id)
 							uni.showToast({
 								title: '删除成功',
-								icon: 'success'
+								icon: 'none'
 							})
 						}
 					}
