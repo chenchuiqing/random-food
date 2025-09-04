@@ -1,7 +1,7 @@
 <template>
   <view
       class="flex flex-col items-center justify-start bg-gradient-to-b from-blue-50 to-purple-50 p-4 pt-8"
-      :style="{ height: `calc(100vh - 94px)` }"
+      style="min-height: calc(100vh - var(--window-top) - var(--window-bottom));"
   >
     <text class="text-3xl font-bold text-gray-800 mb-2">今天吃什么？</text>
 

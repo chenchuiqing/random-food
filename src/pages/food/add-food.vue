@@ -1,15 +1,12 @@
 <template>
-	<view class="flex flex-col min-h-screen bg-gray-100">
+	<view class="flex flex-col bg-gray-100 overflow-hidden" style="min-height: calc(100vh - var(--window-top) - var(--window-bottom));">
 		<!-- 顶部导航栏 -->
-		<view class="bg-white shadow-sm py-4 px-4 flex items-center">
-			<button @click="goBack" class="mr-4">
-				<text class="text-xl">←</text>
-			</button>
-			<text class="text-xl font-semibold">添加美食</text>
+		<view class="bg-white shadow-sm py-4 px-4 flex items-center justify-center">
+			<text class="text-gray-600 text-sm">美食无界，分享此刻的味道</text>
 		</view>
 		
 		<!-- 添加美食表单 -->
-		<view class="flex-1 p-4">
+		<view class="flex-1 p-4 pb-28 overflow-auto">
 			<view class="bg-white rounded-lg shadow-md p-6">
         <view class="mb-6">
           <text class="block text-gray-700 text-sm font-bold mb-2">美食名称</text>
@@ -41,21 +38,25 @@
 					</view>
 				</view>
 				
-				<view class="flex space-x-4 pt-4">
-					<button
-						class="flex-1 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium"
-						@click="goBack"
-					>
-						取消
-					</button>
-					<button
-						class="flex-1 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-medium hover:opacity-90"
-						@click="addFood"
-						:disabled="!foodName.trim()"
-					>
-						保存
-					</button>
-				</view>
+			</view>
+		</view>
+
+		<!-- 底部操作栏 -->
+		<view class="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
+			<view class="flex space-x-4">
+				<button
+					class="flex-1 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium"
+					@click="goBack"
+				>
+					取消
+				</button>
+				<button
+					class="flex-1 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+					@click="addFood"
+					:disabled="!foodName.trim()"
+				>
+					保存
+				</button>
 			</view>
 		</view>
 	</view>
@@ -120,7 +121,10 @@
 				
 				uni.showToast({
 					title: '添加成功',
-					icon: 'success'
+					icon: 'success',
+					position: 'bottom',
+					mask: true,
+					duration: 1500
 				})
 				
 				// 返回上一页
