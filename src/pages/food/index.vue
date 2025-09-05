@@ -1,5 +1,7 @@
 <template>
-	<view class="flex flex-col min-h-screen bg-gray-50">
+	<view class="flex flex-col min-h-screen bg-gray-50"
+		style="min-height: calc(100vh - var(--window-top) - var(--window-bottom));"
+	>
 		<!-- 页面标题 -->
 		<view class="bg-white py-3 px-4 shadow-sm flex items-center justify-center">
 			<text class="text-gray-600 text-sm">{{ currentSlogan }}</text>
@@ -17,9 +19,15 @@
 					添加美食
 				</button>
 			</view>
-			
+					
 			<!-- 美食列表 -->
-			<view class="bg-white rounded-lg shadow-md overflow-hidden">
+			<scroll-view 
+				class="bg-white rounded-lg shadow-md flex-1"
+				scroll-y="true"
+				:enable-back-to-top="true"
+				:scroll-with-animation="true"
+				:show-scrollbar="false"
+			>
 				<view 
 					v-for="(food, index) in foodStore.foods" 
 					:key="food.id"
@@ -68,7 +76,7 @@
 					<text class="text-lg mb-2">暂无美食</text>
 					<text>点击上方按钮添加美食</text>
 				</view>
-			</view>
+			</scroll-view>
 		</view>
 		
 		<!-- 编辑美食弹窗 -->
@@ -140,6 +148,27 @@
 		},
 		
 		methods: {
+			// 添加测试数据（用于验证滚动功能）
+			async addTestFoods() {
+				const testFoods = [
+					'宫保鸡丁', '麻婆豆腐', '红烧肉', '糖醋里脊', '鱼香肉丝',
+					'回锅肉', '水煮鱼', '酸菜鱼', '口水鸡', '白切鸡',
+					'烤鸭', '北京烤鸭', '小笼包', '生煎包', '煎饺',
+					'担担面', '兰州拉面', '重庆小面', '热干面', '炸酱面'
+				]
+				
+				for (let i = 0; i < 10; i++) {
+					const randomIndex = Math.floor(Math.random() * testFoods.length)
+					const foodName = testFoods[randomIndex] + (i + 1)
+					await this.foodStore.addFood(foodName, '')
+				}
+				
+				uni.showToast({
+					title: '测试数据添加成功',
+					icon: 'success'
+				})
+			},
+
 			// 跳转到添加美食页面
 			goToAddFood() {
 				uni.navigateTo({
@@ -205,4 +234,14 @@
 
 <style>
 	/* 页面特殊样式 */
+	.scroll-view {
+		height: 100%;
+		overflow: hidden;
+	}
+	
+	/* 确保 flex-1 能够正确工作 */
+	.flex-1 {
+		flex: 1;
+		min-height: 0; /* 重要：允许 flex 子项收缩到内容以下 */
+	}
 </style>
