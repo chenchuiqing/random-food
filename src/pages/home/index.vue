@@ -69,7 +69,13 @@
         >
           <view
               class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full mb-1 flex items-center justify-center shadow-md border border-gray-100">
-            <text class="text-sm sm:text-lg">🍽️</text>
+            <image
+                v-if="food && food.image"
+                :src="food.image"
+                class="w-full h-full rounded-full"
+                mode="aspectFill"
+            />
+            <text v-else class="text-sm sm:text-lg">🍽️</text>
           </view>
           <text class="text-xs font-medium truncate w-full text-center leading-tight">{{ food.name }}</text>
         </view>
@@ -90,7 +96,13 @@
             </view>
             <view v-show="showSecond" class="-mt-8 sm:-mt-10 flex flex-col items-center transition-all duration-700">
               <view class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white border-4 border-gray-300 shadow-md flex items-center justify-center">
-                <text class="text-lg sm:text-2xl">🍽️</text>
+                <image
+                    v-if="podiumFoods[1] && podiumFoods[1].image"
+                    :src="podiumFoods[1].image"
+                    class="w-full h-full rounded-full"
+                    mode="aspectFill"
+                />
+                <text v-else class="text-lg sm:text-2xl">🍽️</text>
               </view>
               <text class="mt-2 text-xs text-gray-600">第二名</text>
               <text class="font-semibold mt-1 text-xs sm:text-sm truncate max-w-[4rem] sm:max-w-[6rem]">{{ podiumFoods[1]?.name }}</text>
@@ -103,7 +115,13 @@
             </view>
             <view v-show="showFirst" class="-mt-12 sm:-mt-14 flex flex-col items-center transition-all duration-700 transform">
               <view class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-4 border-yellow-400 shadow-lg flex items-center justify-center scale-110">
-                <text class="text-2xl sm:text-3xl">🏆</text>
+                <image
+                    v-if="podiumFoods[0] && podiumFoods[0].image"
+                    :src="podiumFoods[0].image"
+                    class="w-full h-full rounded-full"
+                    mode="aspectFill"
+                />
+                <text v-else class="text-2xl sm:text-3xl">🏆</text>
               </view>
               <text class="mt-2 text-xs text-yellow-700">第一名</text>
               <text class="font-bold mt-1 text-sm sm:text-base truncate max-w-[5rem] sm:max-w-[7rem]">{{ podiumFoods[0]?.name }}</text>
@@ -116,7 +134,13 @@
             </view>
             <view v-show="showThird" class="-mt-6 sm:-mt-8 flex flex-col items-center transition-all duration-700">
               <view class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-4 border-amber-400 shadow flex items-center justify-center">
-                <text class="text-lg sm:text-xl">🍽️</text>
+                <image
+                    v-if="podiumFoods[2] && podiumFoods[2].image"
+                    :src="podiumFoods[2].image"
+                    class="w-full h-full rounded-full"
+                    mode="aspectFill"
+                />
+                <text v-else class="text-lg sm:text-xl">🍽️</text>
               </view>
               <text class="mt-2 text-xs text-amber-700">第三名</text>
               <text class="font-medium mt-1 text-xs sm:text-sm truncate max-w-[3rem] sm:max-w-[5rem]">{{ podiumFoods[2]?.name }}</text>
