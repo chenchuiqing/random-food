@@ -12,8 +12,8 @@
 
     <!-- 选择按钮 -->
     <view
-        class="relative w-48 h-48 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 shadow-xl flex items-center justify-center mb-8
-			       transition-all duration-300 ease-in-out z-10"
+        class="relative w-56 h-56 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 shadow-xl flex items-center justify-center mb-8
+			       transition-all duration-300 ease-in-out z-10 touch-manipulation"
         :class="{
 				'scale-110 shadow-2xl': isPressing,
 				'animate-pulse': !isPressing && !isSelecting && foodStore.foods.length > 0,
@@ -35,14 +35,14 @@
       ></view>
 
       <!-- 按钮文字 -->
-      <text class="text-white text-xl font-bold z-10 text-center">
+      <text class="text-white text-lg sm:text-xl font-bold z-10 text-center px-4">
         {{ buttonLabel }}
       </text>
 
       <!-- 充能进度指示器 -->
       <view
           v-if="isPressing"
-          class="absolute -bottom-8 w-32 h-2 bg-gray-200 rounded-full overflow-hidden"
+          class="absolute -bottom-6 w-36 h-3 bg-gray-200 rounded-full overflow-hidden"
       >
         <view
             class="h-full bg-gradient-to-r from-green-400 to-blue-500 transition-all duration-100"
@@ -53,77 +53,77 @@
 
     <!-- 动画展示区 -->
     <view
-        class="w-full max-w-md mb-8 flex items-center justify-center"
+        class="w-full max-w-sm sm:max-w-md mb-8 flex items-center justify-center px-4"
         :class="{
-				'h-80': isSelecting,
-				'min-h-60': podiumFoods.length > 0 && !isSelecting,
+				'h-80 sm:h-80': isSelecting,
+				'min-h-60 sm:min-h-60': podiumFoods.length > 0 && !isSelecting,
 				'hidden': !isSelecting && podiumFoods.length === 0
 			}"
     >
       <!-- 滚动动画：改成4×5网格 -->
-      <view v-if="isSelecting" class="grid grid-cols-4 grid-rows-5 gap-2 w-full h-full overflow-hidden mt-10">
+      <view v-if="isSelecting" class="grid grid-cols-4 grid-rows-5 gap-1 sm:gap-2 w-full h-full overflow-hidden mt-10">
         <view
             v-for="(food, index) in rollingFoods"
             :key="index"
             class="flex flex-col items-center transition-transform duration-100"
         >
           <view
-              class="w-12 h-12 bg-white rounded-full mb-1 flex items-center justify-center shadow-md border border-gray-100">
-            <text class="text-lg">🍽️</text>
+              class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full mb-1 flex items-center justify-center shadow-md border border-gray-100">
+            <text class="text-sm sm:text-lg">🍽️</text>
           </view>
-          <text class="text-xs font-medium truncate w-full text-center">{{ food.name }}</text>
+          <text class="text-xs font-medium truncate w-full text-center leading-tight">{{ food.name }}</text>
         </view>
       </view>
 
       <!-- 结果展示：三名颁奖台 -->
       <view
           v-if="podiumFoods.length > 0 && !isSelecting"
-          class="flex flex-col items-center transition-all duration-500 py-4 w-full"
+          class="flex flex-col items-center transition-all duration-500 py-4 w-full touch-manipulation"
           @touchstart="resetSelection"
           @mousedown="resetSelection"
       >
-        <view class="w-full max-w-md grid grid-cols-3 gap-3 items-end">
+        <view class="w-full max-w-sm sm:max-w-md grid grid-cols-3 gap-2 sm:gap-3 items-end">
           <!-- 第二名（左） -->
           <view class="flex flex-col items-center">
             <view class="w-full flex items-end justify-center">
-              <view class="bg-gray-200 rounded-t-md w-20 h-16"></view>
+              <view class="bg-gray-200 rounded-t-md w-16 h-12 sm:w-20 sm:h-16"></view>
             </view>
-            <view v-show="showSecond" class="-mt-10 flex flex-col items-center transition-all duration-700">
-              <view class="w-20 h-20 rounded-full bg-white border-4 border-gray-300 shadow-md flex items-center justify-center">
-                <text class="text-2xl">🍽️</text>
+            <view v-show="showSecond" class="-mt-8 sm:-mt-10 flex flex-col items-center transition-all duration-700">
+              <view class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white border-4 border-gray-300 shadow-md flex items-center justify-center">
+                <text class="text-lg sm:text-2xl">🍽️</text>
               </view>
               <text class="mt-2 text-xs text-gray-600">第二名</text>
-              <text class="font-semibold mt-1 text-sm truncate max-w-[6rem]">{{ podiumFoods[1]?.name }}</text>
+              <text class="font-semibold mt-1 text-xs sm:text-sm truncate max-w-[4rem] sm:max-w-[6rem]">{{ podiumFoods[1]?.name }}</text>
             </view>
           </view>
           <!-- 第一名（中） -->
           <view class="flex flex-col items-center">
             <view class="w-full flex items-end justify-center">
-              <view class="bg-yellow-300 rounded-t-md w-24 h-24 shadow"></view>
+              <view class="bg-yellow-300 rounded-t-md w-20 h-20 sm:w-24 sm:h-24 shadow"></view>
             </view>
-            <view v-show="showFirst" class="-mt-14 flex flex-col items-center transition-all duration-700 transform">
-              <view class="w-24 h-24 rounded-full bg-white border-4 border-yellow-400 shadow-lg flex items-center justify-center scale-110">
-                <text class="text-3xl">🏆</text>
+            <view v-show="showFirst" class="-mt-12 sm:-mt-14 flex flex-col items-center transition-all duration-700 transform">
+              <view class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-4 border-yellow-400 shadow-lg flex items-center justify-center scale-110">
+                <text class="text-2xl sm:text-3xl">🏆</text>
               </view>
               <text class="mt-2 text-xs text-yellow-700">第一名</text>
-              <text class="font-bold mt-1 text-base truncate max-w-[7rem]">{{ podiumFoods[0]?.name }}</text>
+              <text class="font-bold mt-1 text-sm sm:text-base truncate max-w-[5rem] sm:max-w-[7rem]">{{ podiumFoods[0]?.name }}</text>
             </view>
           </view>
           <!-- 第三名（右） -->
           <view class="flex flex-col items-center">
             <view class="w-full flex items-end justify-center">
-              <view class="bg-amber-300 rounded-t-md w-20 h-14"></view>
+              <view class="bg-amber-300 rounded-t-md w-16 h-10 sm:w-20 sm:h-14"></view>
             </view>
-            <view v-show="showThird" class="-mt-8 flex flex-col items-center transition-all duration-700">
-              <view class="w-16 h-16 rounded-full bg-white border-4 border-amber-400 shadow flex items-center justify-center">
-                <text class="text-xl">🍽️</text>
+            <view v-show="showThird" class="-mt-6 sm:-mt-8 flex flex-col items-center transition-all duration-700">
+              <view class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-4 border-amber-400 shadow flex items-center justify-center">
+                <text class="text-lg sm:text-xl">🍽️</text>
               </view>
               <text class="mt-2 text-xs text-amber-700">第三名</text>
-              <text class="font-medium mt-1 text-sm truncate max-w-[5rem]">{{ podiumFoods[2]?.name }}</text>
+              <text class="font-medium mt-1 text-xs sm:text-sm truncate max-w-[3rem] sm:max-w-[5rem]">{{ podiumFoods[2]?.name }}</text>
             </view>
           </view>
         </view>
-        <text class="text-gray-500 text-sm mt-4">点击屏幕可重新选择</text>
+        <text class="text-gray-500 text-xs sm:text-sm mt-4 px-4 text-center">点击屏幕可重新选择</text>
       </view>
     </view>
 
@@ -149,7 +149,9 @@ export default {
       podiumFoods: [],
       showFirst: false,
       showSecond: false,
-      showThird: false
+      showThird: false,
+      touchStartX: 0,
+      touchStartY: 0
     }
   },
 
@@ -163,7 +165,7 @@ export default {
 
   methods: {
     // 开始长按
-    handlePressStart() {
+    handlePressStart(event) {
       // 如果正在选择中，则不允许再次点击
       if (this.isSelecting) return
 
@@ -173,6 +175,12 @@ export default {
           icon: 'none'
         })
         return
+      }
+
+      // 记录触摸起始位置，用于防误触
+      if (event.touches && event.touches[0]) {
+        this.touchStartX = event.touches[0].clientX
+        this.touchStartY = event.touches[0].clientY
       }
 
       this.isPressing = true
@@ -198,8 +206,27 @@ export default {
     },
 
     // 结束长按
-    handlePressEnd() {
+    handlePressEnd(event) {
       if (!this.isPressing) return
+
+      // 防误触：检查触摸移动距离
+      if (event.changedTouches && event.changedTouches[0]) {
+        const touchEndX = event.changedTouches[0].clientX
+        const touchEndY = event.changedTouches[0].clientY
+        const moveDistance = Math.sqrt(
+          Math.pow(touchEndX - this.touchStartX, 2) + 
+          Math.pow(touchEndY - this.touchStartY, 2)
+        )
+        
+        // 如果移动距离超过50px，认为是滑动操作，取消长按
+        if (moveDistance > 50) {
+          this.clearPressTimer()
+          this.isPressing = false
+          this.isSelecting = false
+          this.hintText = '长按按钮抽取美食...'
+          return
+        }
+      }
 
       this.clearPressTimer()
       this.isPressing = false
