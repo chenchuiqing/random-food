@@ -107,7 +107,7 @@
 					},
 					fail: () => {
 						// 失败占位：使用已存在的静态资源
-						this.foodImage = '/static/logo.png'
+						this.foodImage = '/static/foods/default.png'
 					}
 				})
 			},
