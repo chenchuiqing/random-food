@@ -14,6 +14,7 @@
               v-model="foodName"
               type="text"
               placeholder="请输入美食名称"
+              maxlength="8"
               :class="[
                 'block w-full h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 text-base',
                 nameError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
@@ -29,6 +30,10 @@
           <!-- 检查状态提示 -->
           <view v-if="isCheckingName" class="mt-1 text-blue-500 text-sm">
             正在检查名称...
+          </view>
+          <!-- 字符计数提示 -->
+          <view class="mt-1 text-sm text-right" :class="foodName.length >= 6 ? 'text-red-500' : 'text-gray-400'">
+            {{ foodName.length }}/8
           </view>
         </view>
 

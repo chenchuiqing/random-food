@@ -95,8 +95,13 @@
               v-model="editingFood.name"
               type="text"
               placeholder="请输入美食名称"
+              maxlength="8"
               class="block w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
           />
+          <!-- 字符计数提示 -->
+          <view class="mt-1 text-sm text-right" :class="editingFood.name.length >= 6 ? 'text-red-500' : 'text-gray-400'">
+            {{ editingFood.name.length }}/8
+          </view>
         </view>
 				
 				<view class="flex space-x-3 pt-4">
