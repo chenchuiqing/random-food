@@ -128,8 +128,36 @@ export const useFoodStore = defineStore('food', {
       }
     },
     
+    // 检查美食名称是否已存在
+    async checkFoodNameExists(name, excludeId = null) {
+      if (this.isDatabaseReady) {
+        try {
+          return await database.checkFoodNameExists(name, excludeId)
+        } catch (error) {
+          console.error('检查食物名称失败:', error)
+          // 如果数据库检查失败，使用内存中的数据作为备用
+          return this.foods.some(food => 
+            food.name.toLowerCase() === name.toLowerCase() && 
+            food.id !== excludeId
+          )
+        }
+      } else {
+        // 如果数据库未就绪，使用内存中的数据
+        return this.foods.some(food => 
+          food.name.toLowerCase() === name.toLowerCase() && 
+          food.id !== excludeId
+        )
+      }
+    },
+
     // 添加美食
     async addFood(name, image = '') {
+      // 先检查名称是否已存在
+      const nameExists = await this.checkFoodNameExists(name)
+      if (nameExists) {
+        throw new Error('该美食名称已存在，请使用其他名称')
+      }
+
       if (this.isDatabaseReady) {
         try {
           // 先添加到数据库

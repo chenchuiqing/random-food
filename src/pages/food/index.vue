@@ -35,14 +35,16 @@
 					:class="{ 'bg-gray-50': index % 2 === 0 }"
 				>
 					<!-- 美食图片 -->
-					<view class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4 overflow-hidden">
+					<view class="w-12 h-12 rounded-full flex items-center justify-center mr-4 overflow-hidden shadow-sm"
+						:class="getFoodImageBgClass(index)"
+					>
 						<image
 							v-if="food.image"
 							:src="food.image"
 							class="w-12 h-12"
 							mode="aspectFill"
 						/>
-						<text v-else class="text-xl text-yellow-500">🍽️</text>
+						<text v-else class="text-xl">🍽️</text>
 					</view>
 					
 					<!-- 美食名称 -->
@@ -148,6 +150,23 @@
 		},
 		
 		methods: {
+			// 获取美食图片背景样式类
+			getFoodImageBgClass(index) {
+				const bgClasses = [
+					'bg-gradient-to-br from-orange-100 to-orange-200', // 橙色渐变
+					'bg-gradient-to-br from-red-100 to-red-200',       // 红色渐变
+					'bg-gradient-to-br from-yellow-100 to-yellow-200', // 黄色渐变
+					'bg-gradient-to-br from-green-100 to-green-200',   // 绿色渐变
+					'bg-gradient-to-br from-blue-100 to-blue-200',     // 蓝色渐变
+					'bg-gradient-to-br from-purple-100 to-purple-200', // 紫色渐变
+					'bg-gradient-to-br from-pink-100 to-pink-200',     // 粉色渐变
+					'bg-gradient-to-br from-indigo-100 to-indigo-200', // 靛蓝渐变
+					'bg-gradient-to-br from-teal-100 to-teal-200',     // 青色渐变
+					'bg-gradient-to-br from-amber-100 to-amber-200'    // 琥珀色渐变
+				]
+				return bgClasses[index % bgClasses.length]
+			},
+
 			// 添加测试数据（用于验证滚动功能）
 			async addTestFoods() {
 				const testFoods = [

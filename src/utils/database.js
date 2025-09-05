@@ -351,6 +351,64 @@ class DatabaseService {
   }
 
   /**
+   * 检查食物名称是否已存在
+   * @param {string} name - 食物名称
+   * @param {number} excludeId - 排除的ID（用于编辑时排除自身）
+   */
+  checkFoodNameExists(name, excludeId = null) {
+    return new Promise((resolve, reject) => {
+      // 如果SQLite不可用，使用本地存储
+      if (!window.plus || !window.plus.sqlite) {
+        try {
+          const foods = this.getFoodsFromStorage()
+          const exists = foods.some(food => 
+            food.name.toLowerCase() === name.toLowerCase() && 
+            food.id !== excludeId
+          )
+          resolve(exists)
+        } catch (error) {
+          console.error('从本地存储检查食物名称失败', error)
+          reject(error)
+        }
+        return
+      }
+
+      let sql = 'SELECT COUNT(*) as count FROM foods WHERE LOWER(name) = LOWER(?)'
+      let params = [name]
+      
+      if (excludeId) {
+        sql += ' AND id != ?'
+        params.push(excludeId)
+      }
+      
+      plus.sqlite.selectSql({
+        name: this.dbName,
+        sql: sql,
+        data: params,
+        success: (data) => {
+          const exists = data && data.length > 0 && data[0].count > 0
+          resolve(exists)
+        },
+        fail: (e) => {
+          console.error('检查食物名称失败，尝试使用本地存储', e)
+          // SQLite失败时，使用本地存储作为备用
+          try {
+            const foods = this.getFoodsFromStorage()
+            const exists = foods.some(food => 
+              food.name.toLowerCase() === name.toLowerCase() && 
+              food.id !== excludeId
+            )
+            resolve(exists)
+          } catch (error) {
+            console.error('从本地存储检查食物名称失败', error)
+            reject(error)
+          }
+        }
+      })
+    })
+  }
+
+  /**
    * 关闭数据库
    */
   close() {
