@@ -2,7 +2,7 @@
     "name" : "吃啥",
     "appid" : "__UNI__502EEF7",
     "description" : "",
-    "versionName" : "1.0.1",
+    "versionName" : "1.2.0",
     "versionCode" : "100",
     "transformPx" : false,
     /* 5+App特有相关 */
@@ -52,9 +52,9 @@
             "splashscreen" : {
                 "androidStyle" : "default",
                 "android" : {
-                    "xhdpi" : "D:/tmp/食物图片/infule_cat.png",
-                    "hdpi" : "D:/tmp/食物图片/infule_cat.png",
-                    "xxhdpi" : "D:/tmp/食物图片/infule_cat.png"
+                    "xhdpi" : "D:/tmp/食物图片/food.png",
+                    "hdpi" : "D:/tmp/食物图片/food.png",
+                    "xxhdpi" : "D:/tmp/食物图片/food.png"
                 }
             },
             "icons" : {

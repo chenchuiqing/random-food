@@ -16,8 +16,8 @@
 			       transition-all duration-300 ease-in-out z-10 touch-manipulation"
         :class="{
 				'scale-110 shadow-2xl': isPressing,
-				'animate-pulse': !isPressing && !isSelecting && foodStore.foods.length > 0,
-				'opacity-50 cursor-not-allowed': isSelecting
+				'animate-pulse': !isPressing && !isSelecting && !isShowingResults && foodStore.foods.length > 0,
+				'opacity-50 cursor-not-allowed': isSelecting || isShowingResults
 			}"
         @touchstart="handlePressStart"
         @touchend="handlePressEnd"
@@ -151,13 +151,15 @@ export default {
       showSecond: false,
       showThird: false,
       touchStartX: 0,
-      touchStartY: 0
+      touchStartY: 0,
+      isShowingResults: false
     }
   },
 
   computed: {
     buttonLabel() {
       if (this.isSelecting) return '选择中...'
+      if (this.isShowingResults) return '结果展示中'
       if (this.isPressing) return '松开选择'
       return '选择美食'
     }
@@ -168,6 +170,9 @@ export default {
     handlePressStart(event) {
       // 如果正在选择中，则不允许再次点击
       if (this.isSelecting) return
+      
+      // 如果正在展示结果，则不允许再次点击
+      if (this.isShowingResults) return
 
       if (this.foodStore.foods.length === 0) {
         uni.showToast({
@@ -274,6 +279,7 @@ export default {
         } else {
           // 动画结束
           this.isSelecting = false
+          this.isShowingResults = true
           const results = this.foodStore.randomSelect(3)
           this.podiumFoods = [results[0], results[1], results[2]].filter(Boolean)
           this.showThird = false
@@ -286,6 +292,10 @@ export default {
               setTimeout(() => {
                 this.showFirst = true
                 this.hintText = '最推荐在中间高台！'
+                // 结果展示完成，允许重新选择
+                setTimeout(() => {
+                  this.isShowingResults = false
+                }, 1000) // 延迟1秒后允许重新选择
               }, 700)
             }, 700)
           }, 500)
@@ -316,11 +326,17 @@ export default {
 
     // 重置选择
     resetSelection() {
+      // 如果正在展示结果，不允许重新选择
+      if (this.isShowingResults) {
+        return
+      }
+      
       this.selectedFoods = []
       this.podiumFoods = []
       this.showFirst = false
       this.showSecond = false
       this.showThird = false
+      this.isShowingResults = false
       this.hintText = '长按按钮抽取美食...'
     },
 
