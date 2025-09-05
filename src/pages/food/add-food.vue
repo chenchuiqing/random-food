@@ -15,7 +15,7 @@
               type="text"
               placeholder="请输入美食名称"
               :class="[
-                'block w-full h-10 px-3 border rounded-lg focus:outline-none focus:ring-2',
+                'block w-full h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 text-base',
                 nameError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
               ]"
               :focusable="true"
@@ -35,15 +35,15 @@
 				<view class="mb-6">
 					<text class="block text-gray-700 text-sm font-bold mb-2">美食图片</text>
 					<view 
-						class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center"
+						class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center active:border-blue-400 active:bg-blue-50 transition-colors touch-manipulation"
 						@click="selectImage"
 					>
 						<view v-if="foodImage" class="w-full h-full flex items-center justify-center">
-							<image :src="foodImage" class="w-32 h-32" mode="aspectFit" />
+							<image :src="foodImage" class="w-32 h-32 rounded-lg" mode="aspectFit" />
 						</view>
 						<view v-else class="flex flex-col items-center">
-							<text class="text-3xl mb-2">📷</text>
-							<text class="text-gray-500">点击上传图片</text>
+							<text class="text-4xl mb-2">📷</text>
+							<text class="text-gray-500 text-base">点击上传图片</text>
 							<text class="text-gray-400 text-sm mt-1">（可选）</text>
 						</view>
 					</view>
@@ -53,16 +53,16 @@
 		</view>
 
 		<!-- 底部操作栏 -->
-		<view class="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
+		<view class="fixed bottom-0 left-0 right-0 bg-white px-4 py-4 shadow-[0_-2px_8px_rgba(0,0,0,0.06)] safe-area-inset-bottom">
 			<view class="flex space-x-4">
 				<button
-					class="flex-1 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium"
+					class="flex-1 py-4 bg-gray-200 text-gray-800 rounded-lg font-medium active:bg-gray-300 touch-manipulation"
 					@click="goBack"
 				>
 					取消
 				</button>
 				<button
-					class="flex-1 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+					class="flex-1 py-4 bg-yellow-500 active:bg-yellow-600 text-white rounded-lg font-medium active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
 					@click="addFood"
 					:disabled="!foodName.trim() || nameError || isCheckingName"
 				>

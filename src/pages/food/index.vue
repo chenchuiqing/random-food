@@ -12,11 +12,11 @@
 			<!-- 添加美食按钮 -->
 			<view class="mb-6">
 				<button 
-					class="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center"
+					class="w-full py-4 bg-yellow-500 active:bg-yellow-600 text-white rounded-lg font-bold shadow-md active:shadow-lg transition-all flex items-center justify-center touch-manipulation"
 					@click="goToAddFood"
 				>
-					<text class="mr-2">+</text>
-					添加美食
+					<text class="mr-2 text-lg">+</text>
+					<text class="text-base">添加美食</text>
 				</button>
 			</view>
 					
@@ -55,13 +55,13 @@
 					<!-- 操作按钮 -->
 					<view class="flex space-x-2">
 						<button 
-							class="px-3 py-1 bg-blue-100 text-blue-600 rounded text-sm hover:bg-blue-200 transition"
+							class="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg text-sm active:bg-blue-200 transition touch-manipulation min-h-[36px]"
 							@click="editFood(food)"
 						>
 							编辑
 						</button>
 						<button 
-							class="px-3 py-1 bg-red-100 text-red-600 rounded text-sm hover:bg-red-200 transition"
+							class="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm active:bg-red-200 transition touch-manipulation min-h-[36px]"
 							@click="deleteFood(food.id)"
 						>
 							删除
@@ -86,7 +86,7 @@
 			v-if="showEditModal" 
 			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
 		>
-			<view class="bg-white rounded-lg w-full max-w-md p-6">
+			<view class="bg-white rounded-lg w-full max-w-sm sm:max-w-md p-6 mx-4">
 				<text class="text-xl font-bold mb-4 block">编辑美食</text>
 
         <view class="mb-4">
@@ -95,19 +95,19 @@
               v-model="editingFood.name"
               type="text"
               placeholder="请输入美食名称"
-              class="block w-full h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="block w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
           />
         </view>
 				
 				<view class="flex space-x-3 pt-4">
 					<button
-						class="flex-1 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium"
+						class="flex-1 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium active:bg-gray-300 touch-manipulation"
 						@click="cancelEdit"
 					>
 						取消
 					</button>
 					<button
-						class="flex-1 py-2 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600"
+						class="flex-1 py-3 bg-yellow-500 text-white rounded-lg font-medium active:bg-yellow-600 touch-manipulation"
 						@click="saveFood"
 					>
 						保存
@@ -123,7 +123,7 @@
 			@click="cancelDelete"
 		>
 			<view 
-				class="bg-white rounded-lg w-full max-w-sm p-6 shadow-xl"
+				class="bg-white rounded-lg w-full max-w-xs sm:max-w-sm p-6 shadow-xl mx-4"
 				@click.stop
 			>
 				<!-- 弹窗标题 -->
@@ -139,13 +139,13 @@
 				<!-- 操作按钮 -->
 				<view class="flex space-x-3">
 					<button
-						class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+						class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium active:bg-gray-300 transition-colors touch-manipulation"
 						@click="cancelDelete"
 					>
 						取消
 					</button>
 					<button
-						class="flex-1 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
+						class="flex-1 py-3 bg-red-500 text-white rounded-lg font-medium active:bg-red-600 transition-colors touch-manipulation"
 						@click="confirmDelete"
 					>
 						删除

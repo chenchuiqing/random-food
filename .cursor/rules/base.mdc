@@ -1,3 +1,5 @@
 ---
 alwaysApply: true
 ---
+
+- 编写的 **Tailwind CSS** 样式需要兼容移动端设备
