@@ -115,6 +115,44 @@
 				</view>
 			</view>
 		</view>
+		
+		<!-- 删除确认弹窗 -->
+		<view 
+			v-if="showDeleteModal" 
+			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+			@click="cancelDelete"
+		>
+			<view 
+				class="bg-white rounded-lg w-full max-w-sm p-6 shadow-xl"
+				@click.stop
+			>
+				<!-- 弹窗标题 -->
+				<view class="text-center mb-4">
+					<text class="text-lg font-bold text-gray-800">确认删除</text>
+				</view>
+				
+				<!-- 弹窗内容 -->
+				<view class="text-center mb-6">
+					<text class="text-gray-600">确定要删除这个美食吗？</text>
+				</view>
+				
+				<!-- 操作按钮 -->
+				<view class="flex space-x-3">
+					<button
+						class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+						@click="cancelDelete"
+					>
+						取消
+					</button>
+					<button
+						class="flex-1 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
+						@click="confirmDelete"
+					>
+						删除
+					</button>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -126,10 +164,12 @@
 			return {
 				foodStore: useFoodStore(),
 				showEditModal: false,
+				showDeleteModal: false,
 				editingFood: {
 					id: null,
 					name: ''
 				},
+				deletingFoodId: null,
 				slogans: [
 					'美食无界，分享此刻的味道',
 					'一口定情，满分好味道',
@@ -225,22 +265,29 @@
 			},
 			
 			// 删除美食
-			async deleteFood(id) {
-				uni.showModal({
-					title: '确认删除',
-					content: '确定要删除这个美食吗？',
-					confirmColor: '#ff0000',
-					success: async (res) => {
-						if (res.confirm) {
-							// 使用数据库持久化存储
-							await this.foodStore.removeFood(id)
-							uni.showToast({
-								title: '删除成功',
-								icon: 'none'
-							})
-						}
-					}
-				})
+			deleteFood(id) {
+				this.deletingFoodId = id
+				this.showDeleteModal = true
+			},
+			
+			// 确认删除
+			async confirmDelete() {
+				if (this.deletingFoodId) {
+					// 使用数据库持久化存储
+					await this.foodStore.removeFood(this.deletingFoodId)
+					uni.showToast({
+						title: '删除成功',
+						icon: 'none'
+					})
+				}
+				this.showDeleteModal = false
+				this.deletingFoodId = null
+			},
+			
+			// 取消删除
+			cancelDelete() {
+				this.showDeleteModal = false
+				this.deletingFoodId = null
 			},
 			
 			// 取消编辑
@@ -262,5 +309,61 @@
 	.flex-1 {
 		flex: 1;
 		min-height: 0; /* 重要：允许 flex 子项收缩到内容以下 */
+	}
+	
+	/* 自定义弹框样式 - 确保跨设备一致性 */
+	.fixed {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 9999;
+	}
+	
+	/* 弹框背景遮罩 */
+	.bg-black.bg-opacity-50 {
+		background-color: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(2px);
+		-webkit-backdrop-filter: blur(2px);
+	}
+	
+	/* 弹框主体 */
+	.bg-white.rounded-lg {
+		background-color: #ffffff;
+		border-radius: 12px;
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+		transform: translateZ(0);
+		-webkit-transform: translateZ(0);
+	}
+	
+	/* 按钮样式优化 */
+	button {
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	
+	/* 确保按钮在触摸设备上有良好的反馈 */
+	button:active {
+		transform: scale(0.98);
+		transition: transform 0.1s ease;
+	}
+	
+	/* 弹框动画效果 */
+	@keyframes modalFadeIn {
+		from {
+			opacity: 0;
+			transform: scale(0.9) translateY(-20px);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1) translateY(0);
+		}
+	}
+	
+	/* 应用动画到弹框 */
+	.bg-white.rounded-lg {
+		animation: modalFadeIn 0.2s ease-out;
 	}
 </style>
