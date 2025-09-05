@@ -28,46 +28,48 @@
 				:scroll-with-animation="true"
 				:show-scrollbar="false"
 			>
-				<view 
-					v-for="(food, index) in foodStore.foods" 
-					:key="food.id"
-					class="flex items-center p-4 border-b border-gray-100 last:border-b-0"
-					:class="{ 'bg-gray-50': index % 2 === 0 }"
-				>
-					<!-- 美食图片 -->
-					<view class="w-12 h-12 rounded-full flex items-center justify-center mr-4 overflow-hidden shadow-sm"
-						:class="getFoodImageBgClass(index)"
+				<uni-swipe-action :auto-close="true">
+					<uni-swipe-action-item 
+						v-for="(food, index) in foodStore.foods" 
+						:key="food.id"
+						:right-width="160"
+						class="last:border-b-0"
 					>
-						<image
-							v-if="food.image"
-							:src="food.image"
-							class="w-12 h-12"
-							mode="aspectFill"
-						/>
-						<text v-else class="text-xl">🍽️</text>
-					</view>
-					
-					<!-- 美食名称 -->
-					<view class="flex-1">
-						<text class="font-medium text-gray-800">{{ food.name }}</text>
-					</view>
-					
-					<!-- 操作按钮 -->
-					<view class="flex space-x-2">
-						<button 
-							class="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg text-sm active:bg-blue-200 transition touch-manipulation min-h-[36px]"
-							@click="editFood(food)"
+						<view 
+							class="flex items-center p-4 border-b border-gray-100"
+							:class="{ 'bg-gray-50': index % 2 === 0 }"
 						>
-							编辑
-						</button>
-						<button 
-							class="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm active:bg-red-200 transition touch-manipulation min-h-[36px]"
-							@click="deleteFood(food.id)"
-						>
-							删除
-						</button>
-					</view>
-				</view>
+							<!-- 美食图片 -->
+							<view class="w-12 h-12 rounded-full flex items-center justify-center mr-4 overflow-hidden shadow-sm"
+								:class="getFoodImageBgClass(index)"
+							>
+								<image
+									v-if="food.image"
+									:src="food.image"
+									class="w-12 h-12"
+									mode="aspectFill"
+								/>
+								<text v-else class="text-xl">🍽️</text>
+							</view>
+							
+							<!-- 美食名称 -->
+							<view class="flex-1">
+								<text class="font-medium text-gray-800">{{ food.name }}</text>
+							</view>
+						</view>
+
+						<template v-slot:right>
+							<view class="flex h-full">
+								<view class="w-20 h-full bg-blue-500 active:bg-blue-600 flex items-center justify-center" @tap.stop="editFood(food)">
+									<view class="text-white text-sm">编辑</view>
+								</view>
+								<view class="w-20 h-full bg-red-500 active:bg-red-600 flex items-center justify-center" @tap.stop="deleteFood(food.id)">
+									<view class="text-white text-sm">删除</view>
+								</view>
+							</view>
+						</template>
+					</uni-swipe-action-item>
+				</uni-swipe-action>
 				
 				<!-- 空状态 -->
 				<view 
@@ -162,9 +164,12 @@
 </template>
 
 <script>
+    import uniSwipeAction from '@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue'
+    import uniSwipeActionItem from '@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue'
 	import { useFoodStore } from '../../stores/food.js'
 	
 	export default {
+		components: { uniSwipeAction, uniSwipeActionItem },
 		data() {
 			return {
 				foodStore: useFoodStore(),

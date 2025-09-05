@@ -54,6 +54,7 @@
     "@dcloudio/uni-mp-xhs": "3.0.0-4070620250821001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-4070620250821001",
     "@dcloudio/uni-stat": "3.0.0-4070620250821001",
+    "@dcloudio/uni-ui": "^1.5.11",
     "@vue/shared": "^3.4.21",
     "axios": "^1.11.0",
     "pinia": "^2.2.2",
@@ -68,6 +69,7 @@
     "@dcloudio/vite-plugin-uni": "3.0.0-4070620250821001",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "sass": "^1.92.0",
     "tailwindcss": "^3.4.3",
     "vite": "5.2.8"
   }
