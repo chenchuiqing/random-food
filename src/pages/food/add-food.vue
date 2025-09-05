@@ -70,22 +70,12 @@
 				</button>
 			</view>
 			
-			<!-- 调试按钮（开发环境） -->
-			<view class="mt-2">
-				<button
-					class="w-full py-2 bg-blue-100 text-blue-600 rounded-lg text-sm"
-					@click="testStorage"
-				>
-					测试存储功能
-				</button>
-			</view>
 		</view>
 	</view>
 </template>
 
 <script>
 	import { useFoodStore } from '../../stores/food.js'
-	import StorageTest from '../../utils/storage-test.js'
 	
 	export default {
 		data() {
@@ -212,42 +202,6 @@
 				uni.navigateBack()
 			},
 			
-			// 测试存储功能
-			async testStorage() {
-				uni.showLoading({
-					title: '测试中...'
-				})
-				
-				try {
-					// 检查存储环境
-					const environment = StorageTest.checkStorageEnvironment()
-					console.log('存储环境:', environment)
-					
-					// 测试本地存储
-					const localTest = StorageTest.testLocalStorage()
-					console.log('本地存储测试结果:', localTest)
-					
-					// 测试数据库存储
-					const dbTest = await StorageTest.testStorage()
-					console.log('数据库存储测试结果:', dbTest)
-					
-					uni.hideLoading()
-					
-					uni.showModal({
-						title: '测试结果',
-						content: `存储环境: ${environment.hasPlus ? 'App环境' : 'H5环境'}\nSQLite: ${environment.hasSqlite ? '可用' : '不可用'}\n本地存储: ${localTest ? '正常' : '异常'}\n数据库: ${dbTest ? '正常' : '异常'}`,
-						showCancel: false
-					})
-					
-				} catch (error) {
-					uni.hideLoading()
-					console.error('存储测试失败:', error)
-					uni.showToast({
-						title: '测试失败',
-						icon: 'none'
-					})
-				}
-			}
 		}
 	}
 </script>
