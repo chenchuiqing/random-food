@@ -8,7 +8,26 @@
 		<!-- 添加美食表单 -->
 		<view class="flex-1 p-4 pb-28 overflow-auto">
 			<view class="bg-white rounded-lg shadow-md p-6">
-        <view class="mb-6">
+				<!-- 模式切换：单个 / 批量 -->
+				<view class="mb-6">
+					<view class="grid grid-cols-2 gap-2">
+						<button
+							class="py-3 rounded-lg text-sm font-medium border transition-colors"
+							:class="!isBatchMode ? 'bg-yellow-500 text-white border-yellow-500 active:opacity-90' : 'bg-white text-gray-700 border-gray-200 active:bg-gray-50'"
+							@click="switchMode(false)"
+						>
+							单个添加
+						</button>
+						<button
+							class="py-3 rounded-lg text-sm font-medium border transition-colors"
+							:class="isBatchMode ? 'bg-yellow-500 text-white border-yellow-500 active:opacity-90' : 'bg-white text-gray-700 border-gray-200 active:bg-gray-50'"
+							@click="switchMode(true)"
+						>
+							批量添加
+						</button>
+					</view>
+				</view>
+        <view class="mb-6" v-if="!isBatchMode">
           <text class="block text-gray-700 text-sm font-bold mb-2">美食名称</text>
           <input
               v-model="foodName"
@@ -34,6 +53,19 @@
           <!-- 字符计数提示 -->
           <view class="mt-1 text-sm text-right" :class="foodName.length >= 6 ? 'text-red-500' : 'text-gray-400'">
             {{ foodName.length }}/8
+          </view>
+        </view>
+
+        <!-- 批量添加表单 -->
+        <view class="mb-6" v-if="isBatchMode">
+          <text class="block text-gray-700 text-sm font-bold mb-2">批量美食名称</text>
+          <textarea
+            v-model="batchInput"
+            class="block w-full h-36 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 text-base border-gray-300 focus:ring-blue-500"
+            placeholder="每行一个名称，或使用逗号分隔（,，）。每个名称最多8个字符。"
+          />
+          <view class="mt-2 text-xs text-gray-500">
+            示例：汉堡\n披萨\n寿司，火锅
           </view>
         </view>
 
@@ -68,10 +100,10 @@
 				</button>
 				<button
 					class="flex-1 py-4 bg-yellow-500 active:bg-yellow-600 text-white rounded-lg font-medium active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-					@click="addFood"
-					:disabled="!foodName.trim() || nameError || isCheckingName"
+					@click="isBatchMode ? addFoodsBatch() : addFood()"
+					:disabled="isBatchMode ? batchValidCount === 0 : (!foodName.trim() || nameError || isCheckingName)"
 				>
-					{{ isCheckingName ? '检查中...' : '保存' }}
+					{{ isBatchMode ? `批量保存(${batchValidCount})` : (isCheckingName ? '检查中...' : '保存') }}
 				</button>
 			</view>
 			
@@ -83,17 +115,41 @@
 	import { useFoodStore } from '../../stores/food.js'
 	
 	export default {
+		computed: {
+			batchValidCount() {
+				if (!this.isBatchMode) return 0
+				const names = (this.batchInput || '')
+					.replace(/\r/g, '\n')
+					.split(/\n|,|，|、/)
+					.map(s => s.trim())
+					.filter(s => s.length > 0 && s.length <= 8)
+				const seen = new Set()
+				let count = 0
+				for (const n of names) {
+					const k = n.toLowerCase()
+					if (!seen.has(k)) { seen.add(k); count++ }
+				}
+				return count
+			}
+		},
 		data() {
 			return {
 				foodStore: useFoodStore(),
 				foodName: '',
 				foodImage: '',
 				nameError: '', // 名称错误提示
-				isCheckingName: false // 是否正在检查名称
+				isCheckingName: false, // 是否正在检查名称
+				// 批量添加
+				isBatchMode: false,
+				batchInput: ''
 			}
 		},
 		
 		methods: {
+			// 模式切换
+			switchMode(toBatch) {
+				this.isBatchMode = !!toBatch
+			},
 			// 输入框获得焦点事件
 			onFocus() {
 				console.log('输入框获得焦点')
@@ -201,7 +257,54 @@
 					}
 				}
 			},
-			
+
+			// 批量添加
+			async addFoodsBatch() {
+				const names = (this.batchInput || '')
+					.replace(/\r/g, '\n')
+					.split(/\n|,|，|、/)
+					.map(s => s.trim())
+					.filter(s => s.length > 0)
+					.slice(0, 200)
+				const within = []
+				const tooLong = []
+				for (const n of names) {
+					if (n.length > 8) tooLong.push(n); else within.push(n)
+				}
+				// 去重（不区分大小写）
+				const seen = new Set()
+				const unique = []
+				for (const n of within) {
+					const k = n.toLowerCase()
+					if (!seen.has(k)) { seen.add(k); unique.push(n) }
+				}
+				if (unique.length === 0) {
+					uni.showToast({ title: '请输入至少一个有效名称', icon: 'none' })
+					return
+				}
+				uni.showLoading({ title: '批量添加中...' })
+				try {
+					const success = []
+					const exists = []
+					for (const n of unique) {
+						const dup = await this.foodStore.checkFoodNameExists(n)
+						if (dup) { exists.push(n); continue }
+						await this.foodStore.addFood(n, this.foodImage)
+						success.push(n)
+					}
+					uni.hideLoading()
+					const msg = `成功 ${success.length} 项` + (exists.length ? `，已存在 ${exists.length} 项` : '') + (tooLong.length ? `，超长忽略 ${tooLong.length} 项` : '')
+					uni.showToast({ title: msg, icon: 'none', duration: 1800 })
+					if (success.length > 0) {
+						setTimeout(() => { uni.navigateBack() }, 1000)
+					}
+				} catch (e) {
+					uni.hideLoading()
+					console.error('批量添加失败:', e)
+					uni.showToast({ title: '批量添加失败，请重试', icon: 'none' })
+				}
+			},
+ 
 			// 返回
 			goBack() {
 				uni.navigateBack()
